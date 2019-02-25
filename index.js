@@ -1,15 +1,20 @@
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose')
+const middleware = require('./utils/middleware')
+const config = require('./utils/config')
+const updateDatabase = require('./utils/databaseUpdater')
+const countriesRouter = require('./controllers/countries')
 
-// Middleware for handling requests to unknown endpoints
-const error = (req, res) => {
-    res.status(404).send({ error: 'unknown endpoint' })
-}
+mongoose.connect(config.mongoUri)
 
+
+app.use('/api/countries', countriesRouter)
 app.use(express.static('build'))
-app.use(error)
+app.use(middleware.error)
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+app.listen(config.port, () => {
+    console.log(`Server running on port ${config.port}`)
 })
+
+updateDatabase()
