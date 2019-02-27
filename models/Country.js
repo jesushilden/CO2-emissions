@@ -8,11 +8,18 @@ const countrySchema = new mongoose.Schema({
 })
 
 countrySchema.statics.format = (country) => {
-    return {
-        id: country._id,
-        name: country.name,
-        emissions: country.emissions,
-        populations: country.populations
+    if (country.emissions.length > 0 && country.populations.length > 0) {
+        return {
+            id: country._id,
+            name: country.name,
+            emissions: country.emissions,
+            populations: country.populations
+        }
+    } else {
+        return {
+            id: country._id,
+            name: country.name
+        }
     }
 }
 
